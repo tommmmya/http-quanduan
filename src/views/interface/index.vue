@@ -1,5 +1,4 @@
 <style scoped lang="less">
-  
 .icon-search{
 position:absolute;
 z-index:999;
@@ -85,7 +84,6 @@ margin-left:15px;
 </style>
 
 <template>
-  <!-- 唐茂修改2023.8.5.12.52 -->
 <div class="home">
     <!-- 左侧导航栏 -->
 <aside class="left-nav">
@@ -112,8 +110,8 @@ margin-left:15px;
  <!-- 顶部 -->
  <!-- 导航栏 -->
  <ul class="navbar">
-    <li class="navs" :class="{clickcolor:item.isClick}" @click="changeNav(item)" v-for="item in navbar" :key="item.name">{{ item.name }}
-    <span class="navsspan">x</span>
+    <li class="navs" :class="{clickcolor:item.isClick}" @click="changeNav(item)" v-for="(item,index) in navbar">{{ item.name }}
+    <span class="navsspan" @click.stop="closeNav(index)">x</span>
     </li>
  </ul>
  <!-- 按钮 -->
@@ -254,14 +252,14 @@ const ProjectId=ref(route.params.id)
 
 //删除
 const Delete=(scope)=>{
-    let index1=0
+  
     let index2=0
-    let FirstI=0
+
     let SecondI=0
     interfaces.value.forEach((item)=>{
         item.forEach((items)=>{
          if(items.id==scope.row.id){
-             FirstI=index1
+    
              SecondI=index2
              ElMessageBox.confirm(
     '确定删除该接口？',
@@ -289,14 +287,13 @@ const Delete=(scope)=>{
          }
          index2++         
         })
-        index1++
         index2=0
     })
     
 }
 
 
-
+//导航栏
 const navbar=ref([{
     name:'API列表', //展示用
     routename:'interface', //跳转路由用
@@ -304,23 +301,46 @@ const navbar=ref([{
     isClick:true, //是否被选中即有颜色
 }])
 
+//关闭导航栏
+const closeNav=(index)=>{
+ navbar.value.splice(index,1)
+ navbar.value[index-1].isClick=true
+ router.back()
+ 
+}
+
+
+
+
+
 //表格点击事件
 const tableclick=(row)=>{
+    let isRepeat=false
     //将点击的推到导航栏上
     navbar.value.forEach((item)=>{
         item.isClick=false
         //将其他的颜色去掉
+        if(item.routeId==row.id){
+           isRepeat=true
+           item.isClick=true 
+        }
+        //避免重复添加
     })
     currentInterface.value=row
-    console.log(currentInterface.value,23);
+    
     //
-    navbar.value.push({name:row.name,routename:'interfaces',routeId:row.id,isClick:true})
+    if(!isRepeat){
+        navbar.value.push({name:row.name,routename:'interfaces',routeId:row.id,isClick:true})
+    }
     //跳转
     router.push({name:'interfaces',params:{id:row.id}})
 }
 
 //点击导航栏切换导航栏事件
 const changeNav=(item)=>{
+    console.log(item.isClick,22);
+    console.log(item);
+
    if(item.routeId<2000000){
     router.push({name:'interface',params:{id:item.routeId}})
    }else{
