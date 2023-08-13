@@ -111,16 +111,16 @@ margin-left:15px;
  <!-- 导航栏 -->
  <ul class="navbar">
     <li class="navs" :class="{clickcolor:item.isClick}" @click="changeNav(item)" v-for="(item,index) in navbar">{{ item.name }}
-    <span class="navsspan" @click.stop="closeNav(index)">x</span>
+    <span class="navsspan" v-if="index!==0" @click.stop="closeNav(index)">x</span>
     </li>
  </ul>
  <!-- 按钮 -->
  <!-- 以下为内容，默认为API列表，点击接口后跳转路由进入接口interfaces路由 -->
  <!-- 小于2000000，即为1000000多为一级页面 -->
 <div v-if="route.params.id<2000000">
-    <div class="topbutton">
- <el-button type="primary" size="default" @click="">创建API</el-button>
- </div>
+    <!-- <div class="topbutton"> -->
+ <!-- <el-button type="primary" size="default" @click="">创建API</el-button> -->
+ <!-- </div> -->
  <!-- 表格 -->
  <div class="table">
     <el-table stripe :data="interfacesArray" @row-click="tableclick">
@@ -139,8 +139,8 @@ margin-left:15px;
     <i class="iconfont icon-gengduo" style="font-size:25px;cursor: pointer;"></i>
     <template #dropdown>
       <el-dropdown-menu>
-        <el-dropdown-item>查看API信息</el-dropdown-item>
-        <el-dropdown-item>修改信息</el-dropdown-item>
+        <el-dropdown-item @click="tableclick(scope.row, '文档')">查看API信息</el-dropdown-item>
+        <el-dropdown-item @click="tableclick(scope.row)">修改信息</el-dropdown-item>
         <el-dropdown-item @click="Delete(scope)">删除</el-dropdown-item>
       </el-dropdown-menu>
     </template>
@@ -304,9 +304,15 @@ const navbar=ref([{
 //关闭导航栏
 const closeNav=(index)=>{
  navbar.value.splice(index,1)
- navbar.value[index-1].isClick=true
- router.back()
- 
+ let ok=true
+ navbar.value[0].isClick=true
+ router.push({
+    name:'interface',
+    params:{
+        id:'1000001'
+    }
+})
+
 }
 
 
@@ -314,7 +320,8 @@ const closeNav=(index)=>{
 
 
 //表格点击事件
-const tableclick=(row)=>{
+const tableclick=(row, tab='文档')=>{
+    // console.log(row);
     let isRepeat=false
     //将点击的推到导航栏上
     navbar.value.forEach((item)=>{
@@ -333,7 +340,7 @@ const tableclick=(row)=>{
         navbar.value.push({name:row.name,routename:'interfaces',routeId:row.id,isClick:true})
     }
     //跳转
-    router.push({name:'interfaces',params:{id:row.id}})
+    router.push({name:'interfaces',params:{id:row.id}, query:{tab}})
 }
 
 //点击导航栏切换导航栏事件
