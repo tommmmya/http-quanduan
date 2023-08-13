@@ -4,7 +4,9 @@
      <el-tab-pane label="文档" name="文档">
          <document :interfaces="props.interface" @goMeasure="goMeasure"></document>
      </el-tab-pane>
-     <el-tab-pane label="修改" name="修改">修改</el-tab-pane>
+     <el-tab-pane label="修改" name="修改">
+     <modify :interfaces="props.interface"></modify>
+    </el-tab-pane>
      <el-tab-pane label="测试" name="测试">
          <measure :interfaces="props.interface"></measure>
      </el-tab-pane>
@@ -16,6 +18,7 @@
  import { ref,reactive } from 'vue'
  import document from './components/document/index.vue'
  import measure from './components/measure/measure.vue'
+ import modify from './components/modify/index.vue'
  const activeName = ref("文档")
  
  const goMeasure=(mockUrl)=>{
