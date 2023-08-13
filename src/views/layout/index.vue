@@ -7,7 +7,9 @@
    <div style="margin-left:5px">管理员</div> 
 </header>
  <div class="box">
-        <router-view></router-view>
+        <keep-alive>
+  <router-view></router-view>
+</keep-alive>
  </div>
 </div>
 </template>

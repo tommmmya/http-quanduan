@@ -4,7 +4,9 @@ import { RouterLink, RouterView } from 'vue-router'
 </script>
 <template>
   <div class="container">
-<router-view></router-view>
+<keep-alive>
+  <router-view></router-view>
+</keep-alive>
   </div>
 </template>
 
@@ -17,7 +19,6 @@ import { RouterLink, RouterView } from 'vue-router'
 
 .container{
 height:100vh;
-overflow-y: hidden;
 }
 li{
   list-style: none;
