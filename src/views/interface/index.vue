@@ -140,7 +140,7 @@ margin-left:15px;
     <template #dropdown>
       <el-dropdown-menu>
         <el-dropdown-item @click="tableclick(scope.row, '文档')">查看API信息</el-dropdown-item>
-        <el-dropdown-item @click="tableclick(scope.row)">修改信息</el-dropdown-item>
+        <el-dropdown-item @click="tableclick(scope.row,'修改')">修改信息</el-dropdown-item>
         <el-dropdown-item @click="Delete(scope)">删除</el-dropdown-item>
       </el-dropdown-menu>
     </template>
@@ -305,7 +305,10 @@ const navbar=ref([{
 const closeNav=(index)=>{
  navbar.value.splice(index,1)
  let ok=true
- navbar.value[0].isClick=true
+navbar.value.forEach((item)=>{
+  item.isClick=false
+})
+   navbar.value[0].isClick=true
  router.push({
     name:'interface',
     params:{
@@ -321,7 +324,13 @@ const closeNav=(index)=>{
 
 //表格点击事件
 const tableclick=(row, tab='文档')=>{
-    // console.log(row);
+  let tabs
+  if(tab!=='修改'&&tab!=='文档'){
+    tabs='文档'
+  }else{
+    tabs=tab
+  }
+    console.log(row);
     let isRepeat=false
     //将点击的推到导航栏上
     navbar.value.forEach((item)=>{
@@ -340,7 +349,7 @@ const tableclick=(row, tab='文档')=>{
         navbar.value.push({name:row.name,routename:'interfaces',routeId:row.id,isClick:true})
     }
     //跳转
-    router.push({name:'interfaces',params:{id:row.id}, query:{tab}})
+    router.push({name:'interfaces',params:{id:row.id}, query:{tab:tabs}})
 }
 
 //点击导航栏切换导航栏事件
