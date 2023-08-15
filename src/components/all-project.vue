@@ -53,23 +53,8 @@
     let count = 5
     const newApi = (item) => {
         
-        count++
-        let id = String(2000000 + count)
-        let name = "接口" + count
-        let obj = {
-            group:"默认",
-            id:id,
-            name:name,
-            time:"2023:8:3:14.07",
-            state:'开发中',
-            request:"get",
-            url:"http",
-            creator:"张三",
-            updater:"李四",
-            arrow:true,
-        }
-        item.push(obj)
-        emits('navchange', obj)
+       
+       
     }
     
     //箭头展开和收缩

@@ -169,10 +169,11 @@ const router=useRouter()
 const currentInterface=ref()
 
 const sousuo=ref('')
+
+
 const interfaces=ref([[{
- 
     group:"默认",
-    id:'2000001',
+    ids:2000001,
     name:"接口1",
     time:"2023:8:3:14.07",
     state:'开发中',
@@ -184,7 +185,7 @@ const interfaces=ref([[{
 },{
    
     group:"默认",
-    id:'2000002',
+    ids:'2000002',
     name:"接口2",
     time:"2023:8:3:14.07",
     state:'开发中',
@@ -231,6 +232,7 @@ const interfaces=ref([[{
     updater:"李四",
     arrow:true,
 }]])
+
 
 //将二维数组手动拆成一维数组以便elementui的table组件遍历
 const interfacesArray=ref()
