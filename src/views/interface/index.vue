@@ -100,8 +100,33 @@ margin-left:15px;
         placeholder="搜索"
         style="width:180px;"
       />
-      <i class="iconfont icon-icon_tianjia" title="创建新分组" style="font-size:22px;margin-left:10px;cursor: pointer;"></i>
+      <i class="iconfont icon-icon_tianjia" title="创建新分组" style="font-size:22px;margin-left:10px;cursor: pointer;" @click="newGroup = true"></i>
 </div>
+  <!-- 创建新分组 -->
+      <el-dialog
+        v-model="newGroup"
+        title="创建分组"
+        width="30%"
+        :before-close="handleClose"
+      >
+        <el-form label-width="80px">
+          <el-form-item label="分组名称">
+            <el-input v-model="newGroupName" />
+          </el-form-item>
+        </el-form>
+        <template #footer>
+          <span class="dialog-footer">
+            <el-button
+              @click="
+                newGroup = false;
+                newGroupName = '';
+              "
+              >取消</el-button
+            >
+            <el-button type="primary" @click="createNewGroup"> 确定 </el-button>
+          </span>
+        </template>
+      </el-dialog>
 <div class="allproject">
    <allProject @navchange="tableclick" name="所有API" :projects="interfaces"></allProject>
 </div>
@@ -170,6 +195,21 @@ const currentInterface=ref()
 
 const sousuo=ref('')
 
+  const newGroup = ref(false);
+const newGroupName = ref("");
+const createNewGroup = () => {
+  if (newGroupName.value.trim()) {
+    const name = newGroupName.value.trim();
+    interfaces.value.push([{ group: name }]);
+    newGroup.value = false;
+    newGroupName.value = "";
+  } else {
+    ElMessage({
+      type: "error",
+      message: "分组名不能为空",
+    });
+  }
+};
 
 const interfaces=ref([[{
     group:"默认",

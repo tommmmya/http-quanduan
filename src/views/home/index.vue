@@ -41,7 +41,7 @@
             <i class="iconfont icon-bitian" style="color: red;"></i>
             描述
           </div>
-          <el-input v-model="newProjects.describe" placeholder="请输入项目描述" />
+          <el-input v-model="newProjects.summary" placeholder="请输入项目描述" />
           <!-- <div class="tiptwo">成员权限</div>
           <el-select v-model="newProjects.limit" class="m-2" placeholder="选择权限">
           <el-option
@@ -108,7 +108,7 @@
     <el-table  stripe :data="projects" @row-click="projectClick" >
     <el-table-column prop="name" label="名称" width="140" />
     <el-table-column prop="time" label="时间"  />
-    <el-table-column prop="describe" label="介绍" />
+    <el-table-column prop="summary" label="介绍" />
     <el-table-column label="操作" >
         <template #default="scope">
  <el-dropdown>
@@ -136,7 +136,7 @@
       <div class="tipone">名称</div>
       <div class="word">{{ curProject.name }}</div>
       <div class="tiptwo">描述</div>
-      <div class="word">{{ curProject.describe }}</div>
+      <div class="word">{{ curProject.summary }}</div>
     </el-dialog>
   <!-- 修改项目信息 -->
   <el-dialog
@@ -153,7 +153,7 @@
       <i class="iconfont icon-bitian" style="color: red;"></i>
       描述
     </div>
-    <el-input v-model="revisingProject.describe" placeholder="请输入项目描述" />
+    <el-input v-model="revisingProject.summary" placeholder="请输入项目描述" />
     <!-- <div class="tiptwo">成员权限</div>
     <el-select v-model="projects.limit" class="m-2" placeholder="选择权限">
     <el-option
@@ -180,38 +180,25 @@
 </template>
 
 <script setup>
-import { ref,reactive } from 'vue'
+import { ref,reactive, onMounted } from 'vue'
 import allProject from '../../components/all-project.vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { useRouter } from 'vue-router';
+import {addProjects,getProjects,deleteProjects} from '../../api/home'
+
+
+
 const sousuo=ref('')
 
 const router=useRouter()
 
-const projects=reactive([{
-    id:1000001,
-    name:"项目1",
-    time:"2023:8:3:14.07",
-    describe:"1.0.0"
+const projects=ref([{
+    id:1,
+    name:"",
+    time:"",
+    summary:""
 },
-{
-    id:1000002,
-    name:"项目2",  
-    time:"2023:8:3:14.07",
-    describe:"1.0.0"
-},
-{
-    id:1000003,
-    name:"项目3",   
-    time:"2023:8:3:14.07",
-    describe:"1.0.0"
-  },
-  {
-    id:1000004,
-    name:"项目4",  
-    time:"2023:8:3:14.07",
-    describe:"1.0.0"
-}
+
 ])
 const projectClick=(row)=>{   
   router.push({ name: 'interface', params: { id: row.id } })
@@ -233,7 +220,8 @@ const Delete=(scope)=>{
         type: 'success',
         message: '删除成功',
       })
-      projects.splice(scope.$index,1)
+      deleteProjects(scope.row.id)
+      Getprojects()
     })
     .catch(() => {
       ElMessage({
@@ -249,22 +237,20 @@ const reviseProject = ref(false)
 const lookProject = ref(false)
 const swaggerProject = ref(false)
 const newProjects=ref({
-    id:'',
     name:"",
-    time:"",
-    describe:""    
+    summary:""    
 })
 const revisingProject=ref({
     id:'1000001',
     name:"项目1",
     time:"2023:8:3:14.07",
-    describe:"1.0.0"
+    summary:"1.0.0"
 })
 const curProject=ref({
    id:"",
   name:"",
   time:"",
-  describe:""
+  summary:""
 })
 const index=ref(0)
   
@@ -276,19 +262,39 @@ const reviseProjectMethod=(scope)=>{
   reviseProject.value=true
   //深拷贝
   revisingProject.value.name=scope.row.name
-  revisingProject.value.describe=scope.row.describe
+  revisingProject.value.summary=scope.row.summary
   index.value=scope.$index
 }
   const reviseOK=()=>{
-    projects[index.value].name=revisingProject.value.name
-    projects[index.value].describe=revisingProject.value.describe
+    projects[index.value].value.name=revisingProject.value.name
+    projects[index.value].value.summary=revisingProject.value.summary
     reviseProject.value=false
   }
-  const createOK=()=>{
-    newProjects.value.id=projects[projects.length-1].id++
-    newProjects.value.time=new Date()
-    projects.push(newProjects.value)
-    addProject.value=false
+
+
+const Getprojects=async()=>{
+  const {data}=await getProjects()
+   projects.value=data.projects
+}
+Getprojects()
+
+
+
+
+
+  const createOK=async()=>{
+    if(newProjects.value!==''&&newProjects.value.name!==''&&newProjects.value.summary!==0){
+      await addProjects(newProjects.value)
+      Getprojects()
+       addProject.value=false
+    }else {
+      ElMessage({
+        type:"error",
+        message:"项目名称不能为空"
+      })
+      addProject.value=false
+    }
+
   }
 // const options = [
 //   {

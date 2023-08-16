@@ -1,5 +1,15 @@
 import request from '../utils/request.js'
 
-export const userInfoapi = (data) => {
-    return request.post('/login', data)
+//新增
+export const addProjects = (data) => {
+    return request.post('/project', data)
+}
+
+//获取
+export const getProjects = (data) => {
+    return request.get('/project', data)
+}
+
+export const deleteProjects = (id) => {
+    return request.delete(`project/${id}`)
 }
