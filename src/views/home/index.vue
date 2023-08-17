@@ -273,7 +273,7 @@ const reviseProjectMethod=(scope)=>{
 
 
 const Getprojects=async()=>{
-  const {data}=await getProjects()
+  const data=await getProjects()
    projects.value=data.projects
 }
 Getprojects()
