@@ -193,9 +193,8 @@ const sousuo=ref('')
 const router=useRouter()
 
 const projects=ref([{
-    id:1,
+    id:'123',
     name:"",
-    time:"",
     summary:""
 },
 
@@ -204,6 +203,7 @@ const projectClick=(row)=>{
   router.push({ name: 'interface', params: { id: row.id } })
 
 }
+
 //删除
 const Delete=(scope)=>{
     ElMessageBox.confirm(
@@ -241,15 +241,11 @@ const newProjects=ref({
     summary:""    
 })
 const revisingProject=ref({
-    id:'1000001',
     name:"项目1",
-    time:"2023:8:3:14.07",
     summary:"1.0.0"
 })
 const curProject=ref({
-   id:"",
   name:"",
-  time:"",
   summary:""
 })
 const index=ref(0)
@@ -275,8 +271,10 @@ const reviseProjectMethod=(scope)=>{
 const Getprojects=async()=>{
   const data=await getProjects()
    projects.value=data.projects
+  
 }
-Getprojects()
+  Getprojects()
+
 
 
 

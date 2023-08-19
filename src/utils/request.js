@@ -36,8 +36,7 @@ request.interceptors.response.use((response) => {
 
 },
     (error) => {
-        // 对响应错误做点什么
-        console.log(123123);
+        // 对响应错误做点什
         ElMessage.error('网络超时');
         return Promise.reject(error);
     }

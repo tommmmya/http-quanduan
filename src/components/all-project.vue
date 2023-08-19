@@ -3,12 +3,12 @@
     <i
       :class="{ rotate: !arrow }"
       @click="Rotate"
-      v-if="projects[0].id"
+      v-show="projects&&projects[0].id"
       class="iconfont icon-arrow-down"
       style="font-size: 12px"
     ></i>
     <i
-      v-if="projects[0].id"
+      v-if="projects&&projects[0].id"
       class="iconfont icon-menu"
       style="margin: 0 10px"
     ></i>
@@ -18,12 +18,12 @@
       style="font-size: 18px; margin-left: 20px; margin-right: 10px"
     ></i>
     <div class="span">{{ name }}</div>
-    <div v-if="projects[0].id" class="span">({{ projects.length }})</div>
+    <div v-if="projects&&projects[0].id" class="span">({{ projects.length }})</div>
   </div>
   <ul
     :class="{ height: !arrow }"
     style="overflow: hidden"
-    v-if="projects[0].id"
+    v-if="projects&&projects[0].id"
   >
     <li
       class="li"
@@ -46,7 +46,7 @@
       <div class="span" @click="console.log(typeof item)">
         {{ item[0].group }}
       </div>
-      <div class="span">({{ item.length }})</div>
+      <div class="span">({{ panduanchangdu(item) }})</div>
       <!-- 添加接口 -->
       <span class="addBtn" @click="(createApi = true), newApi(item)">+</span>
     </div>
@@ -138,15 +138,18 @@ const props = defineProps({
   },
   projects: {
     type: Array,
-    default: () => [],
+    default: [{
+      id:'123'
+    }],
   },
 });
 const router = useRouter();
-const emits = defineEmits(["navchange"]);
+const emits = defineEmits(["navchange","clickOK"]);
 
 const navchange = (item) => {
   emits("navchange", item);
 };
+
 const methods = [
   {
     value: "GET",
@@ -173,12 +176,21 @@ const methods = [
 //新建接口的数据，绑定好
 const data = reactive({
   group: '',
-  ids: "2000001",
   name: "",
   method: '',
   url: "/dog",
   description: "接口描述",
 });
+
+//
+const panduanchangdu=(item)=>{
+  if(Reflect.has(item[0], 'name')){
+    return item.length
+  }else {
+    return 0
+  }
+
+}
 
 
 const createApi = ref(false);
@@ -196,6 +208,7 @@ const clearGroup = () => {
 //发送请求
 const createApiOK = () => {
   console.log('data:',data);
+  emits('clickOK',data)
   clearGroup();
   createApi.value = false;
 };
