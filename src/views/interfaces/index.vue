@@ -4,7 +4,7 @@
        <el-tab-pane label="文档" name="文档">
            <document :interfaces="props.interface" @goMeasure="goMeasure"></document>
        </el-tab-pane>
-       <el-tab-pane label="修改" name="修改">
+       <el-tab-pane v-if="is" label="修改" name="修改">
            <modify :interfaces="props.interface"></modify>
        </el-tab-pane>
        <el-tab-pane label="测试" name="测试">
@@ -20,9 +20,12 @@
    import document from './components/document/index.vue'
    import measure from './components/measure/measure.vue'
    import modify from './components/modify/index.vue'
+   import {userStore} from '../../stores/userInfo'
    const route = useRoute()
    const activeName = ref(route.query.tab)
-   
+   const user=userStore()
+   const is=ref(user.is)
+
    const goMeasure=(mockUrl)=>{
        activeName.value='测试'
        // props.interface.mockUrl=mockUrl

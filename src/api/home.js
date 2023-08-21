@@ -13,3 +13,8 @@ export const getProjects = (data) => {
 export const deleteProjects = (id) => {
     return request.delete(`project/${id}`)
 }
+
+
+export const updateProject = (id, data) => {
+    return request.patch(`project/${id}`, data)
+}

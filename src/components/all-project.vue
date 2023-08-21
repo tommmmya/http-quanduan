@@ -3,12 +3,12 @@
     <i
       :class="{ rotate: !arrow }"
       @click="Rotate"
-      v-show="projects&&projects[0].id"
+      v-show="name=='所有项目'"
       class="iconfont icon-arrow-down"
       style="font-size: 12px"
     ></i>
     <i
-      v-if="projects&&projects[0].id"
+      v-if="name=='所有项目'"
       class="iconfont icon-menu"
       style="margin: 0 10px"
     ></i>
@@ -18,17 +18,20 @@
       style="font-size: 18px; margin-left: 20px; margin-right: 10px"
     ></i>
     <div class="span">{{ name }}</div>
-    <div v-if="projects&&projects[0].id" class="span">({{ projects.length }})</div>
+    <div v-if="name=='所有项目'" class="span">
+      ({{ projects.length }})
+    </div>
   </div>
   <ul
     :class="{ height: !arrow }"
     style="overflow: hidden"
-    v-if="projects&&projects[0].id"
+    v-if="name=='所有项目'"
   >
     <li
       class="li"
-      v-for="(item, index) in projects" :key="index"
-      @click="router.push({ name: 'interface', params: { id: item.id } })"
+      v-for="(item, index) in projects"
+      :key="index"
+      @click="emits('changeNav',item)"
     >
       {{ item.name }}
     </li>
@@ -48,7 +51,7 @@
       </div>
       <div class="span">({{ panduanchangdu(item) }})</div>
       <!-- 添加接口 -->
-      <span class="addBtn" @click="(createApi = true), newApi(item)">+</span>
+      <span v-if="is" class="addBtn" @click="(createApi = true), newApi(item)">+</span>
     </div>
     <div
       v-if="item[0]"
@@ -74,10 +77,20 @@
             :value="item.value"
           />
         </el-select>
-        <el-input v-model="data.url" class="url" />
+        <!-- 接口状态 -->
+        <el-select v-model="data.state" style="width: 100px; margin-left: 10px">
+          <el-option
+            v-for="item in interfaceState"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
+        <el-input v-model="data.path" class="url" />
         <el-button type="primary">保存</el-button>
         <el-button type="danger">删除</el-button>
       </div>
+
       <div class="label">接口名称</div>
       <el-input v-model="data.name" style="width: 60%"></el-input>
       <div class="label">说明</div>
@@ -94,23 +107,21 @@
         @tab-click="handleClick"
       >
         <el-tab-pane label="Params" name="params">
-          <params-table />
+          <span>Query参数</span>
+          <params-table :params="data.query" label="query" />
+          <br />
+          <span>params参数</span>
+          <params-table :params="data.params" label="params" />
         </el-tab-pane>
         <el-tab-pane label="Body" name="body">
-          <params-table />
-        </el-tab-pane>
-        <el-tab-pane label="Cookie" name="cookie">
-          <params-table />
-        </el-tab-pane>
-        <el-tab-pane label="Header" name="header">
-          <params-table />
+          <params-table :params="data.body" label="object" />
         </el-tab-pane>
       </el-tabs>
       <div class="response">
-        <span>返回响应</span>
+        <span style="margin-bottom: 10px; display: block">返回响应</span>
         <el-tabs type="border-card">
           <el-tab-pane label="成功">
-            <params-table></params-table>
+            <params-table label="response" :params="data.response" />
           </el-tab-pane>
         </el-tabs>
       </div>
@@ -130,6 +141,7 @@
     
     <script setup>
 import { ref, reactive, watch, onMounted } from "vue";
+import {userStore} from '../stores/userInfo'
 import { useRoute, useRouter } from "vue-router";
 import paramsTable from "../views/interfaces/components/measure/params-table.vue";
 const props = defineProps({
@@ -138,18 +150,31 @@ const props = defineProps({
   },
   projects: {
     type: Array,
-    default: [{
-      id:'123'
-    }],
+    default: [
+    ],
   },
 });
+const user=userStore()
+const is=ref(user.is)
+const route=useRoute()
 const router = useRouter();
-const emits = defineEmits(["navchange","clickOK"]);
-
+const emits = defineEmits(["navchange", "clickOK",'changeNav']);
+console.log(route.query.is);
 const navchange = (item) => {
   emits("navchange", item);
 };
 
+
+const interfaceState = [
+  {
+    value: "开发中",
+    label: "开发中",
+  },
+  {
+    value: "已上线",
+    label: "已上线",
+  },
+];
 const methods = [
   {
     value: "GET",
@@ -175,27 +200,62 @@ const methods = [
 
 //新建接口的数据，绑定好
 const data = reactive({
-  group: '',
+  group: "",
   name: "",
-  method: '',
-  url: "/dog",
+  method: "",
+  path: "",
   description: "接口描述",
+  state: "",
+  body: [
+    {
+      attr: "",
+      attrValue: "",
+      typeValue: "",
+      summary: "",
+      children: [],
+    },
+  ],
+  response: [
+    {
+      attr: "",
+      attrValue: "",
+      typeValue: "",
+      summary: "",
+      children: [],
+    },
+  ],
+  params: [
+    {
+      attr: "",
+      attrValue: "",
+      typeValue: "",
+      summary: "",
+      children: [],
+    },
+  ],
+  query: [
+    {
+      attr: "",
+      attrValue: "",
+      typeValue: " ",
+      summary: "",
+      children: [],
+    },
+  ],
 });
 
 //
-const panduanchangdu=(item)=>{
-  if(Reflect.has(item[0], 'name')){
-    return item.length
-  }else {
-    return 0
+const panduanchangdu = (item) => {
+  if (Reflect.has(item[0], "name")) {
+    return item.length;
+  } else {
+    return 0;
   }
-
-}
-
+};
 
 const createApi = ref(false);
 const newApi = (item) => {
-  data.group=item[0].group;
+  data.group = item[0].group;
 };
 //发送请求后，清空数据
 const clearGroup = () => {
@@ -207,15 +267,15 @@ const clearGroup = () => {
 };
 //发送请求
 const createApiOK = () => {
-  console.log('data:',data);
-  emits('clickOK',data)
+  console.log("data:", data);
+  emits("clickOK", data);
   clearGroup();
   createApi.value = false;
 };
 defineExpose({
   createApi,
-  data
-})
+  data,
+});
 
 //箭头展开和收缩
 // true则为展开
