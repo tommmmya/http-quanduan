@@ -2,8 +2,8 @@
   <div class="message">
     <span class="interface-name">{{ interfaces.name }}</span>
     <div class="path">
-      <span class="method">{{ interfaces.request }}</span>
-      <span class="url">/{{ interfaces.url }}</span>
+      <span class="method">{{ interfaces.method }}</span>
+      <span class="url">{{ interfaces.path }}</span>
       <span class="state">
         <i class="iconfont icon-dian"></i>
         {{ interfaces.state }}
@@ -11,23 +11,19 @@
     </div>
     <ul class="main-message">
       <li>
-        创建时间
-        <span>{{ interfaces.time }}</span>
+        最近更新时间:
+        <span>{{ interfaces.createdTimeStamp }}</span>
       </li>
       <li>
-        更新时间
-        <span>{{ interfaces.update_time }}</span>
-      </li>
-      <li>
-        修改者
+        最近修改者:
         <span>{{ interfaces.updater }}</span>
       </li>
       <li>
-        创建者
-        <span>{{ interfaces.creator }}</span>
+        创建者:
+        <span>{{ interfaces.creator.name }}</span>
       </li>
       <li>
-        目录
+        目录:
         <span>{{ interfaces.group }}</span>
       </li>
     </ul>
@@ -88,7 +84,7 @@
           </td>
           <td class="example">
             <span>
-              {{ interfaces.example }}
+           
             </span>
           </td>
         </tr>
@@ -126,53 +122,15 @@
 
 <script setup>
 import {ref} from 'vue'
-const interfaces = {
-  group: '默认',
-  id: '2000001',
-  name: '接口2',
-  time: '2023:8:3:14.07',
-  update_time: '2023:8:3:14.07',
-  state: '开发中',
-  request: 'GET',
-  url: 'dog',
-  mockUrl:'	http://127.0.0.1:4523/m1/3084499-0-default/dog',
-  creator: '张三',
-  updater: '李四',
-  params: [
-    {
-      attr: 'name',
-      type: 'string',
-      isMust: '必须',
-    },
-    {
-      attr: 'age',
-      type: 'string',
-      isMust: '必须',
-    },
-  ],
-  example: "{\n''name':'string',\n'age':'string'\n}",
-  response: [
-    {
-      attr: 'name',
-      type: 'string',
-    },
-    {
-      attr: 'age',
-      type: 'string',
-    },
-  ],
-  responseExample: "{\n''name':'string',\n'age':'string'\n}",
-}
-const isMock = ref(false)
-const props = defineProps({
-  interfaces: {
-    type: Object,
-  },
+const props=defineProps({
+  interfaces:{
+    type:Object
+  }
 })
-const emit=defineEmits(['goMeasure'])
-const goMeasure = () => {
-  emit('goMeasure',interfaces.mockUrl)
-}
+
+
+const isMock = ref(false)
+
 </script>
 
 <style scoped lang="less">
@@ -210,7 +168,7 @@ const goMeasure = () => {
   }
   .main-message {
     margin: 16px 15px;
-    width: 829px;
+    width: 1200px;
     height: 24px;
     display: flex;
     justify-content: space-around;

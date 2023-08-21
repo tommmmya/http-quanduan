@@ -97,6 +97,7 @@ margin-left:15px;
 <div class="between"> 
 <div class="input">
   <el-button type="primary" size="default" @click="newGroup = true">创建新分组</el-button>
+  <el-button  type="success" size="default" @click="router.back('/home')">返回项目</el-button>
 </div>
   <!-- 创建新分组 -->
       <el-dialog
@@ -173,7 +174,7 @@ margin-left:15px;
 </div>
 </div>
 
-<router-view v-else :interface="currentInterface"></router-view>
+<router-view v-else :curapi="curapi"></router-view>
 
 </div>
 </div>
@@ -187,14 +188,18 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import {getApis,addApi,deleteApi} from '../../api/interface'
 import {formatDate24} from '../../utils/util'
 import {userStore} from '../../stores/userInfo.js'
+
 const route=useRoute()
 const user=userStore()
+
 
 const router=useRouter()
 const is=ref(true)
 is.value=user.is
 
 const interfacesArray=ref()
+const curapi=ref()
+
 
 
 //转二维
@@ -226,6 +231,8 @@ const GetApis=async()=>{
     item.createdTimeStamp=formatDate24(item.createdTimeStamp)
   })
    transformInterfaces(interfacesArray.value)
+
+   console.log(interfacesArray.value,996);
 }
 GetApis()
 
@@ -261,8 +268,6 @@ const interfaces=ref([])
 
 
 //将二维数组手动拆成一维数组以便elementui的table组件遍历
-
-
 
 
 
@@ -342,13 +347,13 @@ navbar.value.forEach((item)=>{
 
 //表格点击事件
 const tableclick=(row, tab='文档')=>{
+  curapi.value=row
   let tabs
   if(tab!=='修改'&&tab!=='文档'){
     tabs='文档'
   }else{
     tabs=tab
   }
-    console.log(row);
     let isRepeat=false
     //将点击的推到导航栏上
     navbar.value.forEach((item)=>{
@@ -372,9 +377,11 @@ const tableclick=(row, tab='文档')=>{
 
 //点击导航栏切换导航栏事件
 const changeNav=(item)=>{
-    console.log(item.isClick,22);
-    console.log(item);
-
+   interfacesArray.value.forEach((items)=>{
+    if(item.routeId==items.id){
+      curapi.value=items
+    }
+   })
    if(item.routename=='interface'){
     router.push({name:'interface',params:{id:baseId}})
    }else{
@@ -385,6 +392,7 @@ const changeNav=(item)=>{
         //将其他的颜色去掉
     })
     item.isClick=true
+    
 }
 </script>
 

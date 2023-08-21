@@ -177,24 +177,24 @@ const interfaceState = [
 ];
 const methods = [
   {
-    value: "GET",
-    label: "GET",
+    value: "get",
+    label: "get",
   },
   {
-    value: "POST",
-    label: "POST",
+    value: "post",
+    label: "post",
   },
   {
-    value: "PUT",
-    label: "PUT",
+    value: "put",
+    label: "put",
   },
   {
-    value: "PATCH",
-    label: "PATCH",
+    value: "patch",
+    label: "patch",
   },
   {
-    value: "DELETE",
-    label: "DELETE",
+    value: "delete",
+    label: "delete",
   },
 ];
 
@@ -217,6 +217,7 @@ const data = reactive({
   ],
   response: [
     {
+      statusCode:200,
       attr: "",
       attrValue: "",
       typeValue: "",
