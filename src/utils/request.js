@@ -4,9 +4,10 @@ import { userStore } from '../stores/userInfo'
 import { ElMessage, ElMessageBox } from 'element-plus';
 
 const request = axios.create({
-    baseURL: "/api",
+    baseURL: '/api',
     timeout: 30000,
 })
+console.log(import.meta.env.VITE_API_URL, 9999999000);
 request.interceptors.request.use(
     (config) => {
         let token = userStore().token

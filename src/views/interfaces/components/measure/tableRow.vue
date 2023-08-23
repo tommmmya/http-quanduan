@@ -127,8 +127,9 @@
 </template>
 
 <script setup>
-import { reactive, ref } from "vue";
+import { reactive, ref,watch } from "vue";
 const emit = defineEmits(["addNewParams"]);
+
 const props = defineProps({
   item: {
     type: Object,

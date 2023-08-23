@@ -232,7 +232,7 @@ const GetApis=async()=>{
   })
    transformInterfaces(interfacesArray.value)
 
-   console.log(interfacesArray.value,996);
+   console.log(interfacesArray.value,'997asda');
 }
 GetApis()
 

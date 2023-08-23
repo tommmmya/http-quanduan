@@ -29,7 +29,7 @@
 </template>
 
 <script setup>
-import { reactive, ref } from "vue";
+import { reactive, ref,watch } from "vue";
 import tableRow from "./tableRow.vue";
 const props = defineProps({
   params: {
@@ -40,7 +40,6 @@ const props = defineProps({
   },
 });
 
-const params = reactive(props.params||[])
 
 let circleNum = ref(1);
 </script>

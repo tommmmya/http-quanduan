@@ -7,35 +7,36 @@ const props=defineProps({
         type:Object
     }
 })
+console.log(props.curapi,'-----');
 const methods = [
   {
-    value: 'GET',
-    label: 'GET',
+    value: 'get',
+    label: 'get',
   },
   {
-    value: 'POST',
-    label: 'POST',
+    value: 'post',
+    label: 'post',
   },
   {
-    value: 'PUT',
-    label: 'PUT',
+    value: 'put',
+    label: 'put',
   },
   {
-    value: 'PATCH',
-    label: 'PATCH',
+    value: 'patch',
+    label: 'patch',
   },
   {
-    value: 'DELETE',
-    label: 'DELETE',
+    value: 'delete',
+    label: 'delete',
   },
 ]
 const activeName=ref('params')
 const updata=()=>{
-  console.log('@@@curapiUpdata',props.curapi);
-  const {_id,name,group,method,path,params,query,body,response}=props.curapi
-  updateApi(_id,{name,group,method,path,params,query,body,response}).then(res=>{
-    console.log('@@@res',res);
-  })
+  // console.log('@@@curapiUpdata',props.curapi);
+  // const {_id,name,group,method,path,params,query,body,response}=props.curapi
+  // updateApi(_id,{name,group,method,path,params,query,body,response}).then(res=>{
+  //   console.log('@@@res',res);
+  // })
 
 }
 

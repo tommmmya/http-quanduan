@@ -28,7 +28,7 @@
 <template>
   <div class="measure">
     <div class="send">
-      <el-select v-model="value" class="method m-2" size="default">
+      <el-select v-model="method" class="method m-2" size="default">
         <el-option
           v-for="item in options"
           :key="item.value"
@@ -37,21 +37,20 @@
         />
       </el-select>
       <el-input
-        v-model="input"
-        :placeholder="curapi.path"
+        v-model="path"
         style="width: 1337px; height: 32px; margin-right: 20px"
       />
       <el-button type="primary">发送</el-button>
     </div>
     <el-tabs v-model="activeName" class="demo-tabs">
       <el-tab-pane label="Params" name="Params" class="params">
-        <paramsTable :params="curapi.params" label="params"></paramsTable>
+        <paramsTable :params="params" label="params"></paramsTable>
       </el-tab-pane>
       <el-tab-pane label="Query" name="Query" class="params">
-        <paramsTable :params="curapi.query" label="query"></paramsTable>
+        <paramsTable :params="query" label="query"></paramsTable>
       </el-tab-pane>
       <el-tab-pane label="Body" name="Body">
-        <paramsTable :params="curapi.body" label="object"></paramsTable>
+        <paramsTable :params="body" label="object"></paramsTable>
       </el-tab-pane>
     </el-tabs>
    <response :responseData="responseData"></response>
@@ -59,15 +58,41 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, onMounted,watch } from 'vue'
 import paramsTable from './params-table.vue'
 import response from './response.vue'
+const props = defineProps({
+  curapi:{
+    type:Object
+  }
+})
+
+const method = ref()
+const path=ref()
+const params=ref()
+const query=ref()
+const body=ref()
+watch(()=>props.curapi.params,()=>{
+  params.value=props.curapi.params
+  console.log('changeddddd');
+}, { immediate: true })
+watch(()=>props.curapi.query,()=>{
+  query.value=props.curapi.query
+}, { immediate: true })
+watch(()=>props.curapi.body,()=>{
+  body.value=props.curapi.body
+}, { immediate: true })
+
+watch(()=>props.curapi,()=>{
+  method.value=props.curapi.method
+  path.value=import.meta.env.VITE_API_URL+'/mock'+props.curapi.path
+ 
+}, { immediate: true })
 const activeName = ref('Params')
 
-const value = ref(props.curapi.method)
-const basehttp=import.meta.env.VITE_API_URL
-  console.log(import.meta.env)
-const input = ref(basehttp+props.curapi.path)
+
+
+
 const options = [
   {
     value: 'get',
@@ -90,11 +115,7 @@ const options = [
     label: 'options',
   },
 ]
-const props = defineProps({
-  curapi:{
-    type:Object
-  }
-})
+
 
 
 const responseData = {
