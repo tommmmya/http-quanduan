@@ -5,7 +5,7 @@
         v-if="item.children.length !== 0"
         class="iconfont icon-arrow-down"
         style="position: absolute; top: 50%; transform: translateY(-50%)"
-        @click="showChild = !showChild;"
+        @click="showChild = !showChild"
       ></i>
       <input
         :style="{
@@ -16,7 +16,7 @@
         v-model="item.attr"
       />
     </td>
-    <td v-show="props.label !== 'response'&&'object'">
+    <td v-show="props.label !== 'response'">
       <input style="width: 100%; height: 32px" v-model="item.attrValue" />
     </td>
     <td>
@@ -37,11 +37,24 @@
     <td>
       <input style="width: 100%; height: 32px" v-model="item.summary" />
     </td>
+    <td
+      v-show="label == 'response'"
+      style="color: rgba(0, 0, 0, 0.3); width: 8%; height: 32px"
+    >
+      <el-select v-model="mockValue" class="m-2" placeholder="Select">
+        <el-option
+          v-for="items in MockOptions"
+          :key="items.value"
+          :label="items.label"
+          :value="items.value"
+        />
+      </el-select>
+    </td>
     <td style="height: 32px">
       <el-dropdown :hide-on-click="false">
         <i
           class="iconfont icon-icon_tianjia"
-          style="cursor: pointer; margin-right: 10px"
+          style="cursor: pointer; margin-right: 10px; vertical-align: top"
         ></i>
         <template #dropdown>
           <el-dropdown-menu>
@@ -56,7 +69,7 @@
       </el-dropdown>
       <i
         class="iconfont icon-remove"
-        style="cursor: pointer"
+        style="cursor: pointer; vertical-align: top"
         @click="removeParams()"
       ></i>
     </td>
@@ -76,7 +89,7 @@
     <td>
       <input v-model="addParams.attr" ref="addInput" />
     </td>
-    <td v-show="label !== 'response'&&'object'">
+    <td v-show="label !== 'response'">
       <input v-model="addParams.attrValue" />
     </td>
     <td>
@@ -101,12 +114,12 @@
     <td>
       <i
         class="iconfont icon-icon_tianjia"
-        style="cursor: pointer;margin-right: 10px"
+        style="cursor: pointer; margin-right: 10px; vertical-align: top"
         @click="addItem()"
       ></i>
       <i
         class="iconfont icon-remove"
-        style="cursor: pointer"
+        style="cursor: pointer; vertical-align: top"
         @click="clearAdd()"
       ></i>
     </td>
@@ -114,7 +127,7 @@
 </template>
 
 <script setup>
-import {reactive, ref } from "vue";
+import { reactive, ref } from "vue";
 const emit = defineEmits(["addNewParams"]);
 const props = defineProps({
   item: {
@@ -130,9 +143,33 @@ const props = defineProps({
     type: Number,
   },
   index: {
-    type:Number,
-  }
+    type: Number,
+  },
 });
+//mock选项
+const mockValue=ref('')
+const MockOptions=[
+  {
+    label:'@ctitle  生成一个中文标题',
+    value:'@ctitle'
+  },
+  {
+    label:'@cname  生成一个中文姓名',
+    value:'@cname'
+  },{
+    label:'@image  生成一个图片链接',
+    value:'@image'
+  },{
+    label:'@cfirst  生成一个中文姓',
+    value:'@cfirst'
+  },{
+    label:'@clast  生成一个中文名',
+    value:'@clast'
+  },{
+    label:'@cword  生成一个中文词语',
+    value:'@cword'
+  }
+]
 //是否显示添加节点
 const isAdd = ref(false);
 //添加节点是否为子节点
@@ -192,8 +229,8 @@ const typeOptions = [
     value: "any",
   },
 ];
-if(props.label!=='response'&&props.label!=='object'){
-  typeOptions.splice(3,4)
+if (props.label !== "response"&&props.label!=='object') {
+  typeOptions.splice(3, 4);
 }
 const clearAdd = () => {
   addParams.attr = "";
@@ -214,9 +251,9 @@ const pushParams = (item = []) => {
   });
 };
 const removeParams = () => {
-  if(props.circleNum===1&&props.items.length===1){
-    return
-  }else{
+  if (props.circleNum === 1 && props.items.length === 1) {
+    return;
+  } else {
     props.items.splice(props.index, 1);
   }
 };

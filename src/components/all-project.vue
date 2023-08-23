@@ -87,8 +87,6 @@
           />
         </el-select>
         <el-input v-model="data.path" class="url" />
-        <el-button type="primary">保存</el-button>
-        <el-button type="danger">删除</el-button>
       </div>
 
       <div class="label">接口名称</div>
@@ -121,7 +119,7 @@
         <span style="margin-bottom: 10px; display: block">返回响应</span>
         <el-tabs type="border-card">
           <el-tab-pane label="成功">
-            <params-table label="response" :params="data.response" />
+            <params-table label="response" :params="data.response[0].body" />
           </el-tab-pane>
         </el-tabs>
       </div>
@@ -154,6 +152,7 @@ const props = defineProps({
     ],
   },
 });
+const activeName=ref('params')
 const user=userStore()
 const is=ref(user.is)
 const route=useRoute()
@@ -171,8 +170,8 @@ const interfaceState = [
     label: "开发中",
   },
   {
-    value: "已上线",
-    label: "已上线",
+    value: "已完成",
+    label: "已完成",
   },
 ];
 const methods = [
@@ -218,11 +217,17 @@ const data = reactive({
   response: [
     {
       statusCode:200,
-      attr: "",
-      attrValue: "",
-      typeValue: "",
-      summary: "",
-      children: [],
+      body:[
+        {
+          attr: "",
+          attrValue: "",
+          typeValue: "",
+          summary: "",
+          children: [],
+        },
+      ],
+      summary: "响应成功",
+
     },
   ],
   params: [
@@ -265,6 +270,51 @@ const clearGroup = () => {
   data.method = "";
   data.url = "";
   data.description = "";
+  data.body={
+  group: "",
+  name: "",
+  method: "",
+  path: "",
+  description: "接口描述",
+  state: "",
+  body: [
+    {
+      attr: "",
+      attrValue: "",
+      typeValue: "",
+      summary: "",
+      children: [],
+    },
+  ],
+  response: [
+    {
+      statusCode:200,
+      attr: "",
+      attrValue: "",
+      typeValue: "",
+      summary: "",
+      children: [],
+    },
+  ],
+  params: [
+    {
+      attr: "",
+      attrValue: "",
+      typeValue: "",
+      summary: "",
+      children: [],
+    },
+  ],
+  query: [
+    {
+      attr: "",
+      attrValue: "",
+      typeValue: " ",
+      summary: "",
+      children: [],
+    },
+  ],
+}
 };
 //发送请求
 const createApiOK = () => {
@@ -342,7 +392,7 @@ const Rotate2 = (item) => {
       background: rgb(248, 248, 248);
     }
     .url {
-      width: 60%;
+      width: 70%;
       height: 2rem;
       margin: 0 1rem;
     }

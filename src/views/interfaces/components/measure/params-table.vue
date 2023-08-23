@@ -4,14 +4,16 @@
       <tr>
         <td style="width: 20%; height: 32px">参数名</td>
         <td
-          v-show="label !== 'response' && 'object'"
+          v-show="label !== 'response'"
           style="width: 15%; height: 32px"
         >
           参数值
         </td>
         <td style="width: 8%; height: 32px">类型</td>
         <td style="width: 20%; height: 32px">说明</td>
+        <td v-show="label=='response'" style="color:rgba(0, 0, 0, 0.3);width: 8%;height: 32px;">Mock</td>
         <td style="width: 4%; height: 32px">操作</td>
+        
       </tr>
       <tableRow
         v-for="(item, index) in params"

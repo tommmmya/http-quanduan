@@ -157,4 +157,22 @@ const props=defineProps({
 })
 const response=reactive(props.responseData)
 const activeResponse = ref('reactResponse')
+  //树形结构转对象
+const converseTreeToObject = (tree) => {
+    const result = {};
+    if(Array.isArray(tree)){
+        tree.forEach(node=>{
+            const property = node.attr;
+            if (node.typeValue === "object") {
+              result[property] = {};
+              if (node.children.length > 0) {
+                result[property] = converseTreeToObject(node.children);
+              }
+            }else{
+              result[property] = node.attrValue
+            }
+          })
+    }
+    return result
+  };
 </script>

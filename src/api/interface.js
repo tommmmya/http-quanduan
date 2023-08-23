@@ -12,3 +12,8 @@ export const addApi = (data, id) => {
 export const deleteApi = (id) => {
     return request.delete(`/interface/${id}`,)
 }
+
+//更新api
+export const updateApi = (id, data) => {
+    return request.patch(`/interface/${id}`, data)
+}

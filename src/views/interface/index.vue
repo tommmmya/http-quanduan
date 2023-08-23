@@ -97,7 +97,7 @@ margin-left:15px;
 <div class="between"> 
 <div class="input">
   <el-button type="primary" size="default" @click="newGroup = true">创建新分组</el-button>
-  <el-button  type="success" size="default" @click="router.back('/home')">返回项目</el-button>
+  <el-button  type="success" size="default" @click="router.push('/home')">返回项目</el-button>
 </div>
   <!-- 创建新分组 -->
       <el-dialog
@@ -348,6 +348,7 @@ navbar.value.forEach((item)=>{
 //表格点击事件
 const tableclick=(row, tab='文档')=>{
   curapi.value=row
+  console.log('@@@curapi',curapi.value);
   let tabs
   if(tab!=='修改'&&tab!=='文档'){
     tabs='文档'

@@ -53,39 +53,87 @@
         <tr>
           <td
             style="
-              width: 980px;
+              width: 1400px;
               height: 40px;
               font-size: 16px;
-              text-align: center;
+              font-weight: 600;
+              padding-left: 20px;
             "
           >
-            Body请求参数(application/json)
+            query请求参数
           </td>
-          <td
-            style="
-              width: 450px;
-              height: 40px;
-              font-size: 16px;
-              text-align: center;
-            "
-          >
-            示例
-          </td>
+          
         </tr>
         <tr>
-          <td class="params" style="height: 200px">
+          <td class="params">
             <ul>
-              <li v-for="(item, index) in interfaces.params" :key="index">
+              <li v-for="(item, index) in interfaces.query" :key="index">
                 <span class="attr">{{ item.attr }}</span>
-                <span>{{ item.type }}</span>
-                <span class="isMust">{{ item.isMust }}</span>
+                <span style="color: rgba(0, 0, 0, 0.6);">{{ item.typeValue }}</span>
+                <span class="isMust">{{ item.summary }}</span>
               </li>
             </ul>
           </td>
-          <td class="example">
-            <span>
-           
-            </span>
+        </tr>
+      </table>
+    </div>
+  <!-- params请求参数 -->
+    <div class="request">
+      <table class="request-body">
+        <tr>
+          <td
+            style="
+              width: 1400px;
+              height: 40px;
+              font-size: 16px;
+              font-weight: 600;
+              padding-left: 20px;
+            "
+          >
+            params请求参数
+          </td>
+          
+        </tr>
+        <tr>
+          <td class="params">
+            <ul>
+              <li v-for="(item, index) in interfaces.params" :key="index">
+                <span class="attr">{{ item.attr }}</span>
+                <span style="color: rgba(0, 0, 0, 0.6);">{{ item.typeValue }}</span>
+                <span class="isMust">{{ item.summary }}</span>
+              </li>
+            </ul>
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- body请求参数 -->
+    <div class="request">
+      <table class="request-body">
+        <tr>
+          <td
+            style="
+              width: 1400px;
+              height: 40px;
+              font-size: 16px;
+              font-weight: 600;
+              padding-left: 20px;
+            "
+          >
+            body请求参数(application/json)
+          </td>
+          
+        </tr>
+        <tr>
+          <td class="params">
+            <ul>
+              <li v-for="(item, index) in interfaces.body" :key="index">
+                <span class="attr">{{ item.attr }}</span>
+                <span style="color: rgba(0, 0, 0, 0.6);">{{ item.typeValue }}</span>
+                <span class="isMust">{{ item.summary }}</span>
+              </li>
+            </ul>
           </td>
         </tr>
       </table>
@@ -96,22 +144,18 @@
         <span class="tab">成功(200)</span>
         <table class="response-table">
           <tr>
-            <td style="text-align: center; width: 1000px; height: 40px">
+            <td style=" width: 1400px; height: 40px;padding-left: 20px;">
               数据结构
             </td>
-            <td style="text-align: center; width: 450px; height: 40px">示例</td>
           </tr>
           <tr>
-            <td style="width: 1000px; height: 200px">
+            <td>
               <ul>
-                <li v-for="(item, index) in interfaces.response" :key="index">
+                <li v-for="(item, index) in interfaces.response[0].body" :key="index">
                   <span class="attr">{{ item.attr }}</span>
-                  <span class="type">{{ item.type }}</span>
+                  <span class="type">{{ item.typeValue }}</span>
                 </li>
               </ul>
-            </td>
-            <td style="width: 450px; height: 200px">
-              {{ interfaces.responseExample }}
             </td>
           </tr>
         </table>
@@ -127,7 +171,6 @@ const props=defineProps({
     type:Object
   }
 })
-
 
 const isMock = ref(false)
 
@@ -222,7 +265,7 @@ const isMock = ref(false)
       color: rgba(0, 0, 0, 0.7);
     }
     .request-body {
-      margin: 20px 27px;
+      margin: 20px 30px;
       border-top: 1px solid rgba(0, 0, 0, 0.15);
       border-left: 1px solid rgba(0, 0, 0, 0.15);
       td {
