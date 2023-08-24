@@ -40,7 +40,7 @@
         v-model="path"
         style="width: 1337px; height: 32px; margin-right: 20px"
       />
-      <el-button type="primary">发送</el-button>
+      <el-button type="primary" @click="qingqiu">请求</el-button>
     </div>
     <el-tabs v-model="activeName" class="demo-tabs">
       <el-tab-pane label="Params" name="Params" class="params">
@@ -53,7 +53,7 @@
         <paramsTable :params="body" label="object"></paramsTable>
       </el-tab-pane>
     </el-tabs>
-   <response :responseData="responseData"></response>
+   <response :res="res"></response>
   </div>
 </template>
 
@@ -61,11 +61,16 @@
 import { ref, reactive, onMounted,watch } from 'vue'
 import paramsTable from './params-table.vue'
 import response from './response.vue'
+import request from '../../../../utils/request'
 const props = defineProps({
   curapi:{
     type:Object
   }
 })
+
+
+
+const res=ref()
 
 const method = ref()
 const path=ref()
@@ -74,7 +79,6 @@ const query=ref()
 const body=ref()
 watch(()=>props.curapi.params,()=>{
   params.value=props.curapi.params
-  console.log('changeddddd');
 }, { immediate: true })
 watch(()=>props.curapi.query,()=>{
   query.value=props.curapi.query
@@ -85,13 +89,34 @@ watch(()=>props.curapi.body,()=>{
 
 watch(()=>props.curapi,()=>{
   method.value=props.curapi.method
-  path.value=import.meta.env.VITE_API_URL+'/mock'+props.curapi.path
+  path.value='/mock'+props.curapi.path
+  res.value=null
  
 }, { immediate: true })
 const activeName = ref('Params')
 
 
 
+const qingqiu=async()=>{
+  if(method.value=='get'){
+    const result=await request.get(`${path.value}`)
+res.value=result
+
+  }else if(method.value=='post'){
+    const result=request.post(`${path.value}`)
+    res.value=result
+  }else if(method.value=='put'){
+    const result=request.put(`${path.value}`)
+    res.value=result
+  }else if(method.value=='delete'){
+    const result=request.delete(`${path.value}`)
+    res.value=result
+  }else if(method.value=='options'){
+    const result=request.options(`${path.value}`)
+    res.value=result
+  }
+  console.log(res.value);
+}
 
 const options = [
   {

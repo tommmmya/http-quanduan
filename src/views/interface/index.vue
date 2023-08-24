@@ -152,7 +152,7 @@ margin-left:15px;
     <el-table-column prop="method" label="协议" />
     <el-table-column prop="path" label="path" />
     <el-table-column prop="creator.name" label="创建者" />
-    <el-table-column prop="updater" label="最近更新者" />
+    <el-table-column prop="updater.name" label="最近更新者" />
     <el-table-column prop="createdTimeStamp" label="最近更新时间" />
     <el-table-column label="操作" >
         

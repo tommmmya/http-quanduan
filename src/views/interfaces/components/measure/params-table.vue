@@ -4,7 +4,6 @@
       <tr>
         <td style="width: 20%; height: 32px">参数名</td>
         <td
-          v-show="label !== 'response'"
           style="width: 15%; height: 32px"
         >
           参数值

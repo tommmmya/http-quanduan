@@ -222,6 +222,7 @@ const data = reactive({
           attr: "",
           attrValue: "",
           typeValue: "",
+          mock:'',
           summary: "",
           children: [],
         },

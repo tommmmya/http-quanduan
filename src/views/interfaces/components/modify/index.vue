@@ -32,11 +32,9 @@ const methods = [
 ]
 const activeName=ref('params')
 const updata=()=>{
-  // console.log('@@@curapiUpdata',props.curapi);
-  // const {_id,name,group,method,path,params,query,body,response}=props.curapi
-  // updateApi(_id,{name,group,method,path,params,query,body,response}).then(res=>{
-  //   console.log('@@@res',res);
-  // })
+   console.log('@@@curapiUpdata',props.curapi);
+  const {_id,name,group,method,path,params,query,body,response,description}=props.curapi
+   updateApi(_id,{description,name,group,method,path,params,query,body,response}).then(res=>{  })
 
 }
 
@@ -57,7 +55,7 @@ const updata=()=>{
         v-model="curapi.path"
         class="url"
       />
-      <el-button type="primary" @click="updata()">保存</el-button>
+      <el-button type="primary" @click="updata">确定修改</el-button>
     </div>
     <input type="text" class="summary" v-model="curapi.summary" placeholder="接口描述">
     <el-row>
@@ -66,22 +64,6 @@ const updata=()=>{
         <el-select v-model="curapi.state">
           <el-option label="开发中" value="开发中" />
           <el-option label="已完成" value="已完成" />
-        </el-select>
-      </el-col>
-      <el-col :span="4" class="b">
-        <div class="label">责任人</div>
-        <el-select v-model="curapi.creator">
-          <el-option label="张三" value="张三" />
-          <el-option label="李四" value="李四" />
-          <el-option label="王五" value="王五" />
-        </el-select>
-      </el-col>
-      <el-col :span="4"  class="b" >
-        <div class="label">标签</div>
-        <el-select multiple v-model="curapi.tags">
-          <el-option label="默认" value="默认" />
-          <el-option label="dog" value="dog" />
-          <el-option label="cat" value="cat" />
         </el-select>
       </el-col>
     </el-row>

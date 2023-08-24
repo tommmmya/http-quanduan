@@ -16,7 +16,7 @@
         v-model="item.attr"
       />
     </td>
-    <td v-show="props.label !== 'response'">
+    <td>
       <input style="width: 100%; height: 32px" v-model="item.attrValue" />
     </td>
     <td>
@@ -41,7 +41,7 @@
       v-show="label == 'response'"
       style="color: rgba(0, 0, 0, 0.3); width: 8%; height: 32px"
     >
-      <el-select v-model="mockValue" class="m-2" placeholder="Select">
+      <el-select v-model="item.mock" class="m-2" placeholder="Select">
         <el-option
           v-for="items in MockOptions"
           :key="items.value"
@@ -89,7 +89,7 @@
     <td>
       <input v-model="addParams.attr" ref="addInput" />
     </td>
-    <td v-show="label !== 'response'">
+    <td>
       <input v-model="addParams.attrValue" />
     </td>
     <td>
@@ -110,6 +110,19 @@
     </td>
     <td>
       <input v-model="addParams.summary" />
+    </td>
+    <td
+      v-show="label == 'response'"
+      style="color: rgba(0, 0, 0, 0.3); width: 8%; height: 32px"
+    >
+      <el-select v-model="item.mock" class="m-2" placeholder="Select">
+        <el-option
+          v-for="items in MockOptions"
+          :key="items.value"
+          :label="items.label"
+          :value="items.value"
+        />
+      </el-select>
     </td>
     <td>
       <i
@@ -151,24 +164,33 @@ const props = defineProps({
 const mockValue=ref('')
 const MockOptions=[
   {
-    label:'@ctitle  生成一个中文标题',
-    value:'@ctitle'
+    label:'@int  随机整数',
+    value:'@int'
+  },{
+    label:"@float 随机浮点数",
+    value:"@float"
   },
   {
-    label:'@cname  生成一个中文姓名',
+    label:'@cname  随机中文姓名',
     value:'@cname'
   },{
-    label:'@image  生成一个图片链接',
+    label:'@image  随机图片url',
     value:'@image'
   },{
-    label:'@cfirst  生成一个中文姓',
-    value:'@cfirst'
+    label:'@sentence  随机句子',
+    value:'@sentence'
   },{
-    label:'@clast  生成一个中文名',
-    value:'@clast'
+    label:'@paragraph 随机段落',
+    value:'@paragraph'
   },{
-    label:'@cword  生成一个中文词语',
-    value:'@cword'
+    label:'@date  随机日期',
+    value:'@date'
+  },{
+    label:'@phone 随机手机号',
+    value:'@phone'
+  },{
+    label:"@email 随机邮箱",
+    value:"@email"
   }
 ]
 //是否显示添加节点

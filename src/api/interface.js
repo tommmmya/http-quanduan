@@ -17,3 +17,4 @@ export const deleteApi = (id) => {
 export const updateApi = (id, data) => {
     return request.patch(`/interface/${id}`, data)
 }
+

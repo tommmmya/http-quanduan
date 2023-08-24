@@ -87,92 +87,27 @@
       @tab-click="handleClick"
     >
       <el-tab-pane label="Body" name="responseBody">
-        {{ response.Body.data }}
+         <div>
+        {{ data }}
+         </div>
       </el-tab-pane>
-      <el-tab-pane label="实际请求" name="reactResponse">
-        <div class="top">
-          <span class="response-name">请求&nbsp;URL&nbsp;:</span>
-          <span class="method">{{ response.request }}</span>
-          <span class="url">{{ response.url }}</span>
-        </div>
-        <div class="Header">
-          <span class="response-name">Header&nbsp;:</span>
-          <table>
-            <tr>
-              <td style="width: 211px">名称</td>
-              <td style="width: 971px">值</td>
-            </tr>
-            <tr v-for="(item, index) in response.Header" :key="index">
-              <td>{{ item.attr }}</td>
-              <td>{{ item.value }}</td>
-            </tr>
-          </table>
-        </div>
-        <div class="Body">
-          <span class="response-name">Body&nbsp;:</span>
-          <span class="explain">
-            Body&nbsp;类型&nbsp;{{ response.Body.category }}
-          </span>
-          <table>
-            <tr>
-              <td style="width: 200px">NAME</td>
-              <td style="width: 971px">VALUE</td>
-            </tr>
-            <tr v-for="(item, index) in response.Body.data" :key="index">
-              <td>{{ item.attr }}</td>
-              <td>{{ item.value }}</td>
-            </tr>
-          </table>
-        </div>
-      </el-tab-pane>
+     
     </el-tabs>
-    <div class="response-checked">
-      <div class="head">
-        <span style="margin-right: 20px">校验响应</span>
-        <el-switch
-          v-model="response.checked"
-          class="ml-2"
-          style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"
-        />
-      </div>
-      <div class="display">
-        <span>HTTP状态码：{{ response.status }}</span>
-        <span>耗时：</span>
-        <span v-show="response.status === 200">
-          <i class="iconfont icon-zhengque" style="color: #13ce66"></i>
-          返回数据结构校验通过
-        </span>
-      </div>
-    </div>
   </div>
 </template>
 
 <script setup>
-import {ref,reactive} from 'vue'
+import {ref,reactive,watch} from 'vue'
+const activeResponse=ref("responseBody")
 const props=defineProps({
-  responseData:{
-    type:Object,
-    default:()=>{}
+  res:{
+    type:Object
   }
 })
-const response=reactive(props.responseData)
-const activeResponse = ref('reactResponse')
-  //树形结构转对象
-const converseTreeToObject = (tree) => {
-    const result = {};
-    if(Array.isArray(tree)){
-        tree.forEach(node=>{
-            const property = node.attr;
-            if (node.typeValue === "object") {
-              result[property] = {};
-              if (node.children.length > 0) {
-                result[property] = converseTreeToObject(node.children);
-              }
-            }else{
-              result[property] = node.attrValue
-            }
-          })
-    }
-    return result
-  };
+const data=ref()
+watch(()=>props.res,(newval)=>{
+  data.value=newval
+},{
+  immediate:true
+})
 </script>

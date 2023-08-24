@@ -16,7 +16,7 @@
       </li>
       <li>
         最近修改者:
-        <span>{{ interfaces.updater }}</span>
+        <span>{{ interfaces.updater.name }}</span>
       </li>
       <li>
         创建者:
@@ -28,10 +28,7 @@
       </li>
     </ul>
     <div class="mock">
-      <span class="mock-name" style="display: block">Mock</span>
-      <el-button type="primary" class="btn" plain size="large" @click="isMock=!isMock">
-        本地Mock
-      </el-button>
+     
       <table class="mock-table" v-show="isMock">
         <tr>
           <th style="width: 360px; height: 44px">名称</th>

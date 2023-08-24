@@ -20,7 +20,8 @@ request.interceptors.request.use(
 )
 request.interceptors.response.use((response) => {
     const res = response.data
-    if (res.status !== "success") {
+
+    if (response.status !== 200) {
         ElMessage({
             message: (typeof res.data == 'string' && res.data) || res.message || '服务器错误',
             type: 'error',
@@ -38,7 +39,7 @@ request.interceptors.response.use((response) => {
 },
     (error) => {
         // 对响应错误做点什
-        ElMessage.error('网络超时');
+        ElMessage.error(error.response.data.message);
         return Promise.reject(error);
     }
 )
