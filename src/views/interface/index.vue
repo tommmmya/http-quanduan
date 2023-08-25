@@ -44,6 +44,7 @@ margin-left:15px;
     position: relative;
     border-bottom:1px solid #ededed ;
      align-items: center; 
+     
 }
 .neirong {
     flex:1;
@@ -95,12 +96,8 @@ margin-left:15px;
 <!-- 中间 -->
 <div class="between"> 
 <div class="input">
-    <el-input
-       v-model="sousuo"
-        placeholder="搜索"
-        style="width:180px;"
-      />
-      <i class="iconfont icon-icon_tianjia" title="创建新分组" style="font-size:22px;margin-left:10px;cursor: pointer;" @click="newGroup = true"></i>
+  <el-button type="primary" size="default" @click="newGroup = true">创建新分组</el-button>
+  <el-button  type="success" size="default" @click="router.push('/home')">返回项目</el-button>
 </div>
   <!-- 创建新分组 -->
       <el-dialog
@@ -154,8 +151,8 @@ margin-left:15px;
     <el-table-column prop="state" label="状态"  />
     <el-table-column prop="method" label="协议" />
     <el-table-column prop="path" label="path" />
-    <el-table-column prop="creator" label="创建者" />
-    <el-table-column prop="updater" label="最近更新者" />
+    <el-table-column prop="creator.name" label="创建者" />
+    <el-table-column prop="updater.name" label="最近更新者" />
     <el-table-column prop="createdTimeStamp" label="最近更新时间" />
     <el-table-column label="操作" >
         
@@ -165,8 +162,8 @@ margin-left:15px;
     <template #dropdown>
       <el-dropdown-menu>
         <el-dropdown-item @click="tableclick(scope.row, '文档')">查看API信息</el-dropdown-item>
-        <el-dropdown-item @click="tableclick(scope.row,'修改')">修改信息</el-dropdown-item>
-        <el-dropdown-item @click="Delete(scope)">删除</el-dropdown-item>
+        <el-dropdown-item v-if="is" @click="tableclick(scope.row,'修改')">修改信息</el-dropdown-item>
+        <el-dropdown-item v-if="is" @click="Delete(scope)">删除</el-dropdown-item>
       </el-dropdown-menu>
     </template>
   </el-dropdown>
@@ -177,7 +174,7 @@ margin-left:15px;
 </div>
 </div>
 
-<router-view v-else :interface="currentInterface"></router-view>
+<router-view v-else :curapi="curapi"></router-view>
 
 </div>
 </div>
@@ -190,20 +187,19 @@ import { useRoute, useRouter } from 'vue-router';
 import { ElMessage, ElMessageBox } from 'element-plus'
 import {getApis,addApi,deleteApi} from '../../api/interface'
 import {formatDate24} from '../../utils/util'
-const route=useRoute()
-const router=useRouter()
+import {userStore} from '../../stores/userInfo.js'
 
-const interfacesArray=ref([{
-  name:"默认api",
-  group:"默认",
-  method:"GET",
-  id:"123456",
-  path:"/getmail",
-  method:"Get",
-  creator: "64db0ba28066ab44398fe284",
-  createdTimeStamp:1692086885991,
-  arrow:true
-}])
+const route=useRoute()
+const user=userStore()
+
+
+const router=useRouter()
+const is=ref(true)
+is.value=user.is
+
+const interfacesArray=ref()
+const curapi=ref()
+
 
 
 //转二维
@@ -235,17 +231,15 @@ const GetApis=async()=>{
     item.createdTimeStamp=formatDate24(item.createdTimeStamp)
   })
    transformInterfaces(interfacesArray.value)
+
+   console.log(interfacesArray.value,'997asda');
 }
 GetApis()
 
 
 
 //新加api
-const clickOK=async(item)=>{
-  const data={
-    name:item.name,
-    group:item.group
-  }
+const clickOK=async(data)=>{
     await addApi(data,baseId)
     GetApis()
 }
@@ -274,8 +268,6 @@ const interfaces=ref([])
 
 
 //将二维数组手动拆成一维数组以便elementui的table组件遍历
-
-
 
 
 
@@ -355,13 +347,14 @@ navbar.value.forEach((item)=>{
 
 //表格点击事件
 const tableclick=(row, tab='文档')=>{
+  curapi.value=row
+  console.log('@@@curapi',curapi.value);
   let tabs
   if(tab!=='修改'&&tab!=='文档'){
     tabs='文档'
   }else{
     tabs=tab
   }
-    console.log(row);
     let isRepeat=false
     //将点击的推到导航栏上
     navbar.value.forEach((item)=>{
@@ -385,9 +378,11 @@ const tableclick=(row, tab='文档')=>{
 
 //点击导航栏切换导航栏事件
 const changeNav=(item)=>{
-    console.log(item.isClick,22);
-    console.log(item);
-
+   interfacesArray.value.forEach((items)=>{
+    if(item.routeId==items.id){
+      curapi.value=items
+    }
+   })
    if(item.routename=='interface'){
     router.push({name:'interface',params:{id:baseId}})
    }else{
@@ -398,6 +393,7 @@ const changeNav=(item)=>{
         //将其他的颜色去掉
     })
     item.isClick=true
+    
 }
 </script>
 

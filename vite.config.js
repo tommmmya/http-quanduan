@@ -11,7 +11,7 @@ export default defineConfig({
 
     proxy: {
       '/api': {
-        target: 'https://f259bb5cb6e74d596d4e26d78bae1607-app.1024paas.com',	//实际请求地址
+        target: 'https://9c39d4b8d1f93a5eacce879e9914f129-app.1024paas.com',	//实际请求地址
         changeOrigin: true,
       }
     }
