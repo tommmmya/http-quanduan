@@ -31,8 +31,44 @@ const methods = [
   },
 ]
 const activeName=ref('params')
+//去除空请求和空mock
+const clearMockAndRequest=(data)=>{
+  if(Array.isArray(data.body)){
+    data.body.forEach((item,index)=>{
+    if(item.attr==''&&item.attrValue==''){
+      data.body.splice(index,1)
+    }
+  })
+  }
+  if(Array.isArray(data.response[0].body)){
+    data.response[0].body.forEach((item,index)=>{
+    if(item.attr==''&&item.attrValue==''){
+      data.response[0].body.splice(index,1)
+    }
+    if(item.mock==''){
+      delete item.mock
+    }
+  })
+  }
+  if(Array.isArray(data.query)){
+    data.query.forEach((item,index)=>{
+    if(item.attr==''&&item.attrValue==''){
+      data.query.splice(index,1)
+    }
+  })
+  }
+  if(Array.isArray(data.params)){
+    data.params.forEach((item,index)=>{
+    if(item.attr==''&&item.attrValue==''){
+      data.params.splice(index,1)
+    }
+  })
+  }
+  return data
+}
 const updata=()=>{
-   console.log('@@@curapiUpdata',props.curapi);
+  console.log('@@@curapiUpdata',props.curapi);
+  clearMockAndRequest(props.curapi)
   const {_id,name,group,method,path,params,query,body,response,description}=props.curapi
    updateApi(_id,{description,name,group,method,path,params,query,body,response}).then(res=>{  })
 

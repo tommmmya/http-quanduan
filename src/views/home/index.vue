@@ -54,7 +54,7 @@
           </template>
     </el-dialog>
       <!-- 导入swagger -->
-    <el-button  type="success" size="default" @click="swaggerProject = true">导入</el-button>
+   
     <el-dialog
           v-model="swaggerProject"
           title="导入项目"

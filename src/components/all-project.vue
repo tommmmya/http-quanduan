@@ -51,7 +51,7 @@
       </div>
       <div class="span">({{ panduanchangdu(item) }})</div>
       <!-- 添加接口 -->
-      <span v-if="is" class="addBtn" @click="(createApi = true), newApi(item)">+</span>
+      <span v-if="is" class="addBtn" @click="createApis(), newApi(item)">+</span>
     </div>
     <div
       v-if="item[0]"
@@ -269,56 +269,89 @@ const clearGroup = () => {
   data.group = "";
   data.name = "";
   data.method = "";
-  data.url = "";
+  data.path = "";
+  data.state = "";
   data.description = "";
-  data.body={
-  group: "",
-  name: "",
-  method: "",
-  path: "",
-  description: "接口描述",
-  state: "",
-  body: [
-    {
-      attr: "",
-      attrValue: "",
-      typeValue: "",
-      summary: "",
-      children: [],
-    },
-  ],
-  response: [
-    {
-      statusCode:200,
-      attr: "",
-      attrValue: "",
-      typeValue: "",
-      summary: "",
-      children: [],
-    },
-  ],
-  params: [
-    {
-      attr: "",
-      attrValue: "",
-      typeValue: "",
-      summary: "",
-      children: [],
-    },
-  ],
-  query: [
-    {
-      attr: "",
-      attrValue: "",
-      typeValue: " ",
-      summary: "",
-      children: [],
-    },
-  ],
-}
+  data.body=[{
+    attr: "",
+    attrValue: "",
+    typeValue: "",
+    summary: "",
+    children: [],
+  }],
+  data.response=[{
+    statusCode:200,
+    body:[
+      {
+        attr: "",
+        attrValue: "",
+        typeValue: "",
+        mock:'',
+        summary: "",
+        children: [],
+      },
+    ],
+    summary: "响应成功",
+
+  }],
+  data.params=[{
+    attr: "",
+    attrValue: "",
+    typeValue: "",
+    summary: "",
+    children: [],
+  }],
+  data.query=[{
+    attr: "",
+    attrValue: "",
+    typeValue: " ",
+    summary: "",
+    children: [],
+  }]
 };
+//去除空请求和空mock
+const clearMockAndRequest=(data)=>{
+  if(Array.isArray(data.body)){
+    data.body.forEach((item,index)=>{
+    if(item.attr==''&&item.attrValue==''){
+      data.body.splice(index,1)
+    }
+  })
+  }
+  if(Array.isArray(data.response[0].body)){
+    data.response[0].body.forEach((item,index)=>{
+    if(item.attr==''&&item.attrValue==''){
+      data.response[0].body.splice(index,1)
+    }
+    if(item.mock==''){
+      delete item.mock
+    }
+  })
+  }
+  if(Array.isArray(data.query)){
+    data.query.forEach((item,index)=>{
+    if(item.attr==''&&item.attrValue==''){
+      data.query.splice(index,1)
+    }
+  })
+  }
+  if(Array.isArray(data.params)){
+    data.params.forEach((item,index)=>{
+    if(item.attr==''&&item.attrValue==''){
+      data.params.splice(index,1)
+    }
+  })
+  }
+  return data
+}
+const createApis=()=>{
+  clearGroup()
+  createApi.value = true
+
+}
 //发送请求
 const createApiOK = () => {
+  clearMockAndRequest(data)
   console.log("data:", data);
   emits("clickOK", data);
   clearGroup();

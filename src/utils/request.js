@@ -20,8 +20,8 @@ request.interceptors.request.use(
 )
 request.interceptors.response.use((response) => {
     const res = response.data
-
-    if (response.status !== 200) {
+    console.log(response);
+    if (response.status !== 200 && response.status !== 201) {
         ElMessage({
             message: (typeof res.data == 'string' && res.data) || res.message || '服务器错误',
             type: 'error',

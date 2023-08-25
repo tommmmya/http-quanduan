@@ -1,12 +1,6 @@
 <template>
   <tr>
     <td>
-      <i
-        v-if="item.children.length !== 0"
-        class="iconfont icon-arrow-down"
-        style="position: absolute; top: 50%; transform: translateY(-50%)"
-        @click="showChild = !showChild"
-      ></i>
       <input
         :style="{
           width: '100%',
@@ -25,6 +19,7 @@
         class="m-2 selected"
         placeholder="Select"
         style="width: 100%; height: 32px"
+        @change="changeValue('item')"
       >
         <el-option
           v-for="(opt, index) in typeOptions"
@@ -85,62 +80,11 @@
     :circleNum="circleNum + 1"
     :addNewParams="addChild"
   ></tableRow>
-  <tr v-show="isAdd">
-    <td>
-      <input v-model="addParams.attr" ref="addInput" />
-    </td>
-    <td>
-      <input v-model="addParams.attrValue" />
-    </td>
-    <td>
-      <el-select
-        v-model="addParams.typeValue"
-        class="m-2"
-        placeholder="Select"
-        size="default"
-        @change="showObject"
-      >
-        <el-option
-          v-for="(opt, index) in typeOptions"
-          :key="index"
-          :label="opt.label"
-          :value="opt.value"
-        />
-      </el-select>
-    </td>
-    <td>
-      <input v-model="addParams.summary" />
-    </td>
-    <td
-      v-show="label == 'response'"
-      style="color: rgba(0, 0, 0, 0.3); width: 8%; height: 32px"
-    >
-      <el-select v-model="item.mock" class="m-2" placeholder="Select">
-        <el-option
-          v-for="items in MockOptions"
-          :key="items.value"
-          :label="items.label"
-          :value="items.value"
-        />
-      </el-select>
-    </td>
-    <td>
-      <i
-        class="iconfont icon-icon_tianjia"
-        style="cursor: pointer; margin-right: 10px; vertical-align: top"
-        @click="addItem()"
-      ></i>
-      <i
-        class="iconfont icon-remove"
-        style="cursor: pointer; vertical-align: top"
-        @click="clearAdd()"
-      ></i>
-    </td>
-  </tr>
+
 </template>
 
 <script setup>
-import { reactive, ref,watch } from "vue";
+import { reactive, ref, watch } from "vue";
 const emit = defineEmits(["addNewParams"]);
 
 const props = defineProps({
@@ -161,58 +105,61 @@ const props = defineProps({
   },
 });
 //mock选项
-const mockValue=ref('')
-const MockOptions=[
+const MockOptions = [
   {
-    label:'@int  随机整数',
-    value:'@int'
-  },{
-    label:"@float 随机浮点数",
-    value:"@float"
+    label: "@int  随机整数",
+    value: "@int",
   },
   {
-    label:'@cname  随机中文姓名',
-    value:'@cname'
-  },{
-    label:'@image  随机图片url',
-    value:'@image'
-  },{
-    label:'@sentence  随机句子',
-    value:'@sentence'
-  },{
-    label:'@paragraph 随机段落',
-    value:'@paragraph'
-  },{
-    label:'@date  随机日期',
-    value:'@date'
-  },{
-    label:'@phone 随机手机号',
-    value:'@phone'
-  },{
-    label:"@email 随机邮箱",
-    value:"@email"
-  }
-]
-//是否显示添加节点
-const isAdd = ref(false);
+    label: "@float 随机浮点数",
+    value: "@float",
+  },
+  {
+    label: "@cname  随机中文姓名",
+    value: "@cname",
+  },
+  {
+    label: "@image  随机图片url",
+    value: "@image",
+  },
+  {
+    label: "@sentence  随机句子",
+    value: "@sentence",
+  },
+  {
+    label: "@paragraph 随机段落",
+    value: "@paragraph",
+  },
+  {
+    label: "@date  随机日期",
+    value: "@date",
+  },
+  {
+    label: "@phone 随机手机号",
+    value: "@phone",
+  },
+  {
+    label: "@email 随机邮箱",
+    value: "@email",
+  },
+  {
+    label: "",
+    value: "",
+  },
+];
+
 //添加节点是否为子节点
 const target = ref(true);
 //是否显示子节点
 const showChild = ref(false);
 //缩进
-const addInput = ref(null);
 const toNext = () => {
-  isAdd.value = true;
   target.value = false;
-  addInput.value.style.paddingLeft = props.circleNum * 20 + "px";
-  addInput.value.focus();
-  console.log(addInput.value);
+  addItem();
 };
 const toChild = () => {
-  isAdd.value = true;
   target.value = true;
-  addInput.value.style.paddingLeft = (props.circleNum + 1) * 20 + "px";
-  addInput.value.focus();
+  addItem();
 };
 const addParams = reactive({
   attr: "",
@@ -220,20 +167,21 @@ const addParams = reactive({
   type: "",
   typeValue: "",
   summary: "",
+  mock: "",
   children: [],
 });
 const typeOptions = [
   {
-    label: "string",
-    value: "string",
+    label: "Person",
+    value: "Person",
   },
   {
-    label: "number",
-    value: "number",
+    label: "Article",
+    value: "Article",
   },
   {
-    label: "boolean",
-    value: "boolean",
+    label: "Tag",
+    value: "Tag",
   },
   {
     label: "object",
@@ -251,9 +199,21 @@ const typeOptions = [
     label: "any",
     value: "any",
   },
+  {
+    label: "string",
+    value: "string",
+  },
+  {
+    label: "number",
+    value: "number",
+  },
+  {
+    label: "boolean",
+    value: "boolean",
+  },
 ];
-if (props.label !== "response"&&props.label!=='object') {
-  typeOptions.splice(3, 4);
+if (props.label !== "response" && props.label !== "object") {
+  typeOptions.splice(0, 7);
 }
 const clearAdd = () => {
   addParams.attr = "";
@@ -261,7 +221,6 @@ const clearAdd = () => {
   addParams.type = "";
   addParams.typeValue = "";
   addParams.summary = "";
-  isAdd.value = false;
 };
 const pushParams = (item = []) => {
   item.push({
@@ -293,6 +252,162 @@ const addItem = () => {
     addNewParams();
   } else {
     addChild();
+  }
+};
+//监听mock值的变化
+const Person = [
+  {
+    attr: "person",
+    attrValue: "",
+    typeValue: "object",
+    mock: "",
+    children: [
+      {
+        attr: "private",
+        attrValue: "",
+        typeValue: "object",
+        mock: "",
+        children: [
+          {
+            attr: "name",
+            attrValue: "",
+            typeValue: "string",
+            mock: "@cname",
+            children: [],
+          },
+          {
+            attr: "birthday",
+            attrValue: "",
+            typeValue: "string",
+            mock: "@date",
+            children: [],
+          },
+        ],
+      },
+      {
+        attr: "phoneNumber",
+        attrValue: "",
+        typeValue: "number",
+        mock: "@phone",
+        children: [],
+      },
+      {
+        attr: "email",
+        attrValue: "",
+        typeValue: "string",
+        mock: "@email",
+        children: [],
+      },
+    ],
+  },
+];
+const Article = [
+  {
+    attr: "article",
+    attrValue: "",
+    typeValue: "object",
+    mock: "",
+    children: [
+      {
+        attr: "title",
+        attrValue: "",
+        typeValue: "string",
+        mock: "@sentence",
+        children: [],
+      },
+      {
+        attr: "content",
+        attrValue: "",
+        typeValue: "string",
+        mock: "@paragraph",
+        children: [],
+      },
+      {
+        attr: "author",
+        attrValue: "",
+        typeValue: "string",
+        mock: "@cname",
+        children: [],
+      },
+      {
+        attr: "tag",
+        attrValue: "",
+        typeValue: "Tag",
+        mock: "",
+        children: [],
+      },
+      {
+        attr: "date",
+        attrValue: "",
+        typeValue: "string",
+        mock: "@date",
+        children: [],
+      },
+      {
+        attr: "id",
+        attrValue: "",
+        typeValue: "number",
+        mock: "@int",
+        children: [],
+      },
+    ],
+  },
+];
+const Tag = [
+  {
+    attr: "tag",
+    attrValue: "",
+    typeValue: "object",
+    children: [
+      {
+        attr: "name",
+        attrValue: "",
+        typeValue: "string",
+        mock: "@cname",
+        children: [],
+      },
+      {
+        attr: "id",
+        attrValue: "",
+        typeValue: "number",
+        mock: "@int",
+        children: [],
+      },
+    ],
+  },
+];
+const changeValue = (item) => {
+  console.log(item);
+  switch (item) {
+    case "item":
+      props.item.children = [];
+      props.item.mock = "";
+      switch (props.item.typeValue) {
+        case "Person":
+        props.items.splice(props.index, 1,Person[0]);
+          break;
+        case "Article":
+        props.items.splice(props.index, 1,Article[0]);
+          break;
+        case "Tag":
+        props.items.splice(props.index, 1,Tag[0]);
+          break;
+        default:
+          break;
+      }
+      break;
+    case "addParams":
+      switch (addParams.typeValue) {
+        case "Person":
+          break;
+        case "Article":
+          break;
+        case "Tag":
+          break;
+        default:
+          break;
+      }
+      break;
   }
 };
 </script>
