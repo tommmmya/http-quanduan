@@ -228,7 +228,7 @@ const ischange=userInfos.ischange
 const userId=userInfos.userInfo
 console.log(userId.name,123);
 
-
+const projectid=ref('')
 
 
 
@@ -318,16 +318,19 @@ const index=ref(0)
     curProject.value=scope.row
   }
 const reviseProjectMethod=(scope)=>{
+  projectid.value=scope.row.id
   reviseProject.value=true
   //深拷贝
   revisingProject.value.name=scope.row.name
   revisingProject.value.summary=scope.row.summary
   index.value=scope.$index
 }
-  const reviseOK=()=>{
-    projects[index.value].value.name=revisingProject.value.name
-    projects[index.value].value.summary=revisingProject.value.summary
+  const reviseOK=async()=>{
+    projects.value[index.value].name=revisingProject.value.name
+    projects.value[index.value].summary=revisingProject.value.summary
     reviseProject.value=false
+   await updateProject(projectid.value,revisingProject.value)
+    Getprojects()
   }
 
 
@@ -361,7 +364,7 @@ const Getprojects=async()=>{
 }
   Getprojects()
 
-const projectid=ref('')
+
 
 const quanxianOK=async()=>{
   let array=[]
@@ -373,7 +376,6 @@ const quanxianOK=async()=>{
      }
   }
   let excludedMember={excludedMembers:array}
-  console.log(excludedMember,987);
  await updateProject(projectid.value,excludedMember)
  Getprojects()
  quanxianProject.value=false
